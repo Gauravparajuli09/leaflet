@@ -68,5 +68,17 @@ googleSat = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
  });
 googleSat.addTo(map);
 
+// Layer Control
+var baseLayers = {
+    "OpenStreetMap": osm,
+    "Satellite":googleSat,
+    "Google Map":googleStreets,
+    "Water Color":Stamen_Watercolor,
+};
 
+var overlays = {
+    "Marker": singleMarker,
+};
+
+L.control.layers(baseLayers, overlays).addTo(map);
 </script>
