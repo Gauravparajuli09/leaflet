@@ -19,24 +19,34 @@
 </body>
 </html>
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<script src="./data/line.js"></script>
+<script src="./data/point.js"></script>
+<script src="./data/polygon.js"></script>
 <script>
     var map = L.map('map').setView([28.25255,83.97669], 13);
 
+/*===================================================
+                      OSM  LAYER               
+===================================================*/
 
-// OSM Layer
 var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 });
 osm.addTo(map);
 
+/*===================================================
+                      MARKER               
+===================================================*/
 
-// // Marker
 var singleMarker = L.marker([28.25255,83.97669]);
 singleMarker.addTo(map);
 var popup = singleMarker.bindPopup('This is a popup')
 popup.addTo(map);
 
-// Tile layer
+/*===================================================
+                     TILE LAYER               
+===================================================*/
+
 var Stamen_Watercolor = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.{ext}', {
  attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
 subdomains: 'abcd',
@@ -68,7 +78,28 @@ googleSat = L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
  });
 googleSat.addTo(map);
 
-// Layer Control
+
+/*===================================================
+                      GEOJSON               
+===================================================*/
+
+var linedata = L.geoJSON(lineJSON).addTo(map);
+var pointdata = L.geoJSON(pointJSON).addTo(map);
+var polygondata = L.geoJSON(polygonJSON,{
+    onEachFeature: function(feature,layer){
+        layer.bindPopup('<b>This is a </b>' + feature.properties.name)
+    },
+    style:{
+        fillColor: 'red',
+        fillOpacity:0.1,
+        color: 'green'
+    }
+}).addTo(map);
+
+/*===================================================
+                      LAYER CONTROL               
+===================================================*/
+
 var baseLayers = {
     "OpenStreetMap": osm,
     "Satellite":googleSat,
@@ -78,7 +109,13 @@ var baseLayers = {
 
 var overlays = {
     "Marker": singleMarker,
+    "PointData":pointdata,
+    "LineData":linedata,
+    "PolygonData":polygondata
 };
 
 L.control.layers(baseLayers, overlays).addTo(map);
+
+
+
 </script>
